@@ -1505,14 +1505,15 @@ body {
 }
 
 @media (max-width: 480px) {
+  /* ✅ GARDER L'ALIGNEMENT À GAUCHE POUR LES CARDS */
   .content-card-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    flex-direction: row; /* ✅ CHANGÉ de column à row */
+    align-items: flex-start; /* ✅ CHANGÉ de center à flex-start */
+    text-align: left; /* ✅ CHANGÉ de center à left */
   }
 
   .content-card-body {
-    text-align: center;
+    text-align: left; /* ✅ CHANGÉ de center à left */
   }
 
   .btn-view,
@@ -1521,22 +1522,25 @@ body {
   }
 
   .logo {
-    font-size: 1.125rem;
+    font-size: 1rem; /* ✅ CHANGÉ de 1.125rem à 1rem */
   }
 
+  /* ✅ GARDER LE TEXTE DU LOGO VISIBLE SUR MOBILE */
   .logo span:last-child {
-    display: none;
+    display: inline; /* ✅ CHANGÉ de none à inline */
   }
 
+  /* ✅ GARDER LE TEXTE DU BOUTON ACCUEIL VISIBLE */
   .home-button span {
-    display: none;
+    display: inline; /* ✅ CHANGÉ de none à inline */
   }
 
   .home-button {
-    padding: 0.625rem;
-    width: 40px;
-    height: 40px;
+    padding: 0.625rem 1rem; /* ✅ CHANGÉ de 0.625rem à 0.625rem 1rem */
+    width: auto; /* ✅ CHANGÉ de 40px à auto */
+    height: auto; /* ✅ CHANGÉ de 40px à auto */
     justify-content: center;
+    font-size: 0.8125rem; /* ✅ AJOUTÉ */
   }
 
   .welcome-title {
@@ -1586,6 +1590,17 @@ body {
   .badge-2,
   .badge-3 {
     display: none;
+  }
+
+  /* ✅ AJOUTÉ - S'assurer que les cards restent en grille responsive */
+  .content-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .grid-2,
+  .grid-3 {
+    grid-template-columns: 1fr;
   }
 }
 

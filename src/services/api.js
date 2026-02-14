@@ -81,12 +81,11 @@ class ApiService {
 
   /**
    * Convertit un chemin de fichier en URL complète
-   * Gère plusieurs formats possibles de file_path
    */
   getFileUrl(filePath) {
     if (!filePath) return null;
 
-    // Si c'est déjà une URL complète, on la retourne telle quelle
+    // Si c'est déjà une URL complète, la retourner
     if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
       return filePath;
     }
@@ -99,43 +98,9 @@ class ApiService {
     cleanPath = cleanPath.replace(/^storage\//, '');
     cleanPath = cleanPath.replace(/^\//, '');
 
-    // OPTION 1: Si vos fichiers sont dans https://podo.b1.ma/storage/
-    // return `https://podo.b1.ma/storage/${cleanPath}`;
-
-    // OPTION 2: Si vos fichiers sont directement accessibles via l'API
-    // return `${API_BASE_URL}/files/${cleanPath}`;
-
-    // OPTION 3: Si vos fichiers sont dans un dossier public spécifique
-    // Basé sur votre erreur, essayez d'abord celle-ci:
+    // Construire l'URL complète
+    // Assurez-vous que ceci correspond à votre configuration backend
     return `https://podo.b1.ma/storage/${cleanPath}`;
-  }
-
-  /**
-   * Télécharge un fichier directement
-   * Alternative si les liens directs ne fonctionnent pas
-   */
-  async downloadFile(filePath, fileName) {
-    try {
-      const url = this.getFileUrl(filePath);
-      const response = await fetch(url);
-      
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
-      }
-      
-      const blob = await response.blob();
-      const downloadUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.download = fileName || 'document.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(downloadUrl);
-    } catch (error) {
-      console.error('Erreur lors du téléchargement:', error);
-      alert('Impossible de télécharger le fichier. Veuillez réessayer.');
-    }
   }
 }
 

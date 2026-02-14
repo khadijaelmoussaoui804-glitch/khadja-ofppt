@@ -2,7 +2,13 @@ import React from 'react';
 import { useStore } from '../store';
 
 const WelcomePage = () => {
-  const { setPage } = useStore();
+  const { setPage, fetchYears } = useStore();
+
+  const handleContinue = async () => {
+    // Charger les années avant de naviguer
+    await fetchYears();
+    setPage('years');
+  };
 
   return (
     <div className="welcome-page">
@@ -12,23 +18,58 @@ const WelcomePage = () => {
             Master your<br />
             <span className="title-gradient">skills online</span>
           </h1>
-          <p className="welcome-subtitle">Plateforme d'apprentissage moderne pour les étudiants OFPPT</p>
+
+          <p className="welcome-subtitle">
+            Plateforme d'apprentissage moderne pour les étudiants OFPPT
+          </p>
+
           <div className="features-grid">
-            <div className="feature-box"><div className="feature-icon">📚</div><span>Cours interactifs OFPPT</span></div>
-            <div className="feature-box"><div className="feature-icon">📥</div><span>Ressources téléchargeables</span></div>
-            <div className="feature-box"><div className="feature-icon">🎯</div><span>Examens et EFM/EFF</span></div>
-            <div className="feature-box"><div className="feature-icon">⏰</div><span>Horaire flexible</span></div>
+            <div className="feature-box">
+              <div className="feature-icon">📚</div>
+              <span>Cours interactifs OFPPT</span>
+            </div>
+            <div className="feature-box">
+              <div className="feature-icon">📥</div>
+              <span>Ressources téléchargeables</span>
+            </div>
+            <div className="feature-box">
+              <div className="feature-icon">🎯</div>
+              <span>Examens et EFM/EFF</span>
+            </div>
+            <div className="feature-box">
+              <div className="feature-icon">⏰</div>
+              <span>Horaire flexible</span>
+            </div>
           </div>
-          <button className="btn-continuer" onClick={() => setPage('years')}>
+
+          <button 
+            className="btn-continuer" 
+            onClick={handleContinue}
+            type="button"
+          >
             CONTINUER →
           </button>
         </div>
+
         <div className="welcome-right">
           <div className="character-circle">
+            {/* Cercles décoratifs animés */}
+            <div className="decorative-circle circle-1"></div>
+            <div className="decorative-circle circle-2"></div>
+            <div className="decorative-circle circle-3"></div>
+            <div className="decorative-circle circle-4"></div>
+            
             <img src="/boy.jpg" alt="Student" className="character-img" />
-            <div className="floating-badge badge-1">📖 Cours</div>
-            <div className="floating-badge badge-2">✅ Exercices</div>
-            <div className="floating-badge badge-3">🎓 Examens</div>
+            
+            <div className="floating-badge badge-1">
+              📖 Cours
+            </div>
+            <div className="floating-badge badge-2">
+              ✅ Exercices
+            </div>
+            <div className="floating-badge badge-3">
+              🎓 Examens
+            </div>
           </div>
         </div>
       </div>

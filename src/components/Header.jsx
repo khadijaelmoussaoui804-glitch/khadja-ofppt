@@ -1,9 +1,9 @@
 import React from 'react';
-import { Home } from 'lucide-react';
+import { Home, Sun, Moon } from 'lucide-react';
 import { useStore } from '../store';
 
 const Header = ({ showBreadcrumb = false }) => {
-  const { setPage, selectedYear, selectedFiliere, selectedModule } = useStore();
+  const { setPage, theme, toggleTheme } = useStore();
 
   return (
     <div className="app-header">
@@ -12,31 +12,32 @@ const Header = ({ showBreadcrumb = false }) => {
           <span className="logo-icon">🎓</span>
           <span>OFPPT Learning</span>
         </div>
-        {showBreadcrumb && (
-          <div className="nav-breadcrumb">
-            <span className="breadcrumb-item" onClick={() => setPage('years')} style={{ cursor: 'pointer' }}>
-              <Home size={16} /> Accueil
-            </span>
-            {selectedYear && (
-              <>
-                <span className="breadcrumb-separator">/</span>
-                <span className="breadcrumb-item">{selectedYear.name}</span>
-              </>
+        
+        <div className="header-right">
+          {/* Bouton Accueil uniquement si on n'est pas déjà sur la page d'accueil */}
+          {showBreadcrumb && (
+            <button 
+              className="home-button"
+              onClick={() => setPage('welcome')}
+              aria-label="Retour à l'accueil"
+            >
+              <Home size={20} />
+              <span>Accueil</span>
+            </button>
+          )}
+          
+          <button 
+            className="theme-toggle" 
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+          >
+            {theme === 'light' ? (
+              <Moon size={20} />
+            ) : (
+              <Sun size={20} />
             )}
-            {selectedFiliere && (
-              <>
-                <span className="breadcrumb-separator">/</span>
-                <span className="breadcrumb-item">{selectedFiliere.name}</span>
-              </>
-            )}
-            {selectedModule && (
-              <>
-                <span className="breadcrumb-separator">/</span>
-                <span className="breadcrumb-item">{selectedModule.name}</span>
-              </>
-            )}
-          </div>
-        )}
+          </button>
+        </div>
       </div>
     </div>
   );

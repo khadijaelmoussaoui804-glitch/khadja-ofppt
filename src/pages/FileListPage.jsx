@@ -20,20 +20,81 @@ const FileListPage = ({ type }) => {
 
   const current = dataMap[type];
 
+  // Fonction pour générer un nom de fichier propre basé sur le titre
+  const getCleanFileName = (item) => {
+    const title = item.title || item.name || 'document';
+    return title
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s\-]/gi, '')
+      .replace(/\s+/g, '-')
+      .toLowerCase() + '.pdf';
+  };
+
+  // ACTION : Téléchargement forcé avec le NOM DU COURS
+  const handleDownload = async (item, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const fileUrl = ApiService.getFileUrl(item.file_path);
+    const fileName = getCleanFileName(item);
+
+    try {
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Erreur de téléchargement:', error);
+      window.open(fileUrl, '_blank');
+    }
+  };
+
+  // ACTION : Voir le document avec nom propre
+  const handleView = (item, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const fileUrl = ApiService.getFileUrl(item.file_path);
+    
+    // Créer un nom de fichier propre pour l'affichage
+    const cleanTitle = (item.title || item.name || 'document')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s\-]/gi, '')
+      .replace(/\s+/g, '-')
+      .toLowerCase();
+    
+    // Ouvrir avec un nom propre dans l'URL (pour l'affichage dans le navigateur)
+    const newWindow = window.open(fileUrl, '_blank');
+    if (newWindow) {
+      // Changer le titre de l'onglet
+      newWindow.document.title = item.title || item.name || 'Document';
+    }
+  };
+
   return (
-    <div>
+    <div className="app-container">
       <Header showBreadcrumb={true} />
       <div className="page-container">
         <div className="page-content">
-          <button onClick={() => setPage(current.back)} className="back-button">
-            <ChevronLeft size={20} /> Retour
-          </button>
+          {/* Layout vertical amélioré */}
+          <div className="page-header-with-back">
+            <button onClick={() => setPage(current.back)} className="back-button">
+              <ChevronLeft size={20} /> Retour
+            </button>
 
-          <div className="page-header">
-            <h1 className="page-title">{current.title}</h1>
-            <p className="page-subtitle">
-              {type === 'eff' ? selectedFiliere?.name : selectedModule?.name}
-            </p>
+            <div className="page-header">
+              <h1 className="page-title">{current.title}</h1>
+              <p className="page-subtitle">
+                {type === 'eff' ? selectedFiliere?.name : selectedModule?.name}
+              </p>
+            </div>
           </div>
 
           {loading ? <LoadingSpinner /> : (
@@ -53,40 +114,27 @@ const FileListPage = ({ type }) => {
                       </div>
                       <div className="content-card-body">
                         <h3 className="content-card-title">{item.title || item.name}</h3>
-                        {item.description && (
-                          <p className="content-card-description">{item.description}</p>
-                        )}
-                        {item.file_path && (
-                          <span className="content-card-badge">
-                            <Download size={14} /> Document disponible
-                          </span>
-                        )}
+                        <span className="content-card-badge">
+                          PDF • {current.title}
+                        </span>
                       </div>
                     </div>
+                    
                     <div className="content-card-actions">
-                      {item.file_path && (
-                        <>
-                          <a 
-                            href={ApiService.getFileUrl(item.file_path)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-view"
-                          >
-                            <Eye size={18} />
-                            Voir
-                          </a>
-                          <a 
-                            href={ApiService.getFileUrl(item.file_path)}
-                            download
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn-download-small"
-                          >
-                            <Download size={18} />
-                            Télécharger
-                          </a>
-                        </>
-                      )}
+                      <button
+                        onClick={(e) => handleView(item, e)}
+                        className="btn-view"
+                      >
+                        <Eye size={18} />
+                        Voir
+                      </button>
+                      <button
+                        onClick={(e) => handleDownload(item, e)}
+                        className="btn-download-small"
+                      >
+                        <Download size={18} />
+                        Télécharger
+                      </button>
                     </div>
                   </div>
                 ))}

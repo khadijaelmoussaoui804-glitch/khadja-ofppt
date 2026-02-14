@@ -18,16 +18,33 @@ const App = () => {
     initTheme,
     selectedYear,
     selectedFiliere,
-    selectedModule
+    selectedModule,
+    setPage
   } = useStore();
 
   useEffect(() => {
     // Initialiser le thème au chargement
     initTheme();
     
-    // Charger les années en arrière-plan (sans changer de page)
+    // Charger les années en arrière-plan
     fetchYears();
-  }, [fetchYears, initTheme]);
+
+    // ✅ Détecter si c'est un accès direct via URL (premier chargement de la page)
+    const isFirstLoad = !sessionStorage.getItem('hasVisitedWelcome');
+    
+    // Si c'est le premier chargement ET qu'on n'est pas sur Welcome
+    if (isFirstLoad && currentPage !== 'welcome') {
+      // Rediriger vers Welcome
+      setPage('welcome');
+      // Marquer qu'on a visité Welcome dans cette session
+      sessionStorage.setItem('hasVisitedWelcome', 'true');
+    }
+    
+    // Si on est sur Welcome, marquer comme visité
+    if (currentPage === 'welcome') {
+      sessionStorage.setItem('hasVisitedWelcome', 'true');
+    }
+  }, [fetchYears, initTheme, currentPage, setPage]);
 
   // Mettre à jour le titre de la page et l'URL selon la navigation
   useEffect(() => {

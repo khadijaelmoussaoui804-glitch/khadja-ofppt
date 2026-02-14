@@ -24,7 +24,8 @@ const App = () => {
   useEffect(() => {
     // Initialiser le thème au chargement
     initTheme();
-    // Charger les années
+    
+    // Charger les années en arrière-plan (sans changer de page)
     fetchYears();
   }, [fetchYears, initTheme]);
 
@@ -94,10 +95,7 @@ const App = () => {
           path = '/';
       }
 
-      // Mettre à jour le titre de la page
       document.title = title;
-
-      // Mettre à jour l'URL sans recharger la page
       window.history.pushState({}, '', path);
     };
 

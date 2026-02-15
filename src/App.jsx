@@ -134,7 +134,7 @@ const App = () => {
       default: return <WelcomePage />;
     }
   };
-
+  
   return (
     <div className="app-container">
       {renderPage()}

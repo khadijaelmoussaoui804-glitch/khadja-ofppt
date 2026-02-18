@@ -4,10 +4,8 @@ import { useStore } from '../store';
 const WelcomePage = () => {
   const { setPage, fetchYears } = useStore();
 
-  const handleContinue = async () => {
-    // Charger les années avant de naviguer
-    await fetchYears();
-    setPage('years');
+  const handleContinue = () => {
+  setPage('years');
   };
 
   return (
